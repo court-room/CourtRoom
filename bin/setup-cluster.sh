@@ -8,7 +8,7 @@ fi
 
 set -euo pipefail
 
-NODES=("master", "worker1", "worker2") 
+NODES=("master" "worker1" "worker2") 
 LXC_PROFILE="k8s"
 
 create_k8s_profile() {
@@ -17,7 +17,7 @@ create_k8s_profile() {
   echo "==================================================="
 
   if ! lxc profile list | grep -q "k8s"; then
-    echo "💡 Creating k8s profile"
+    echo "🪪 Creating k8s profile"
     echo "==================================================="
     lxc profile create k8s
     lxc profile edit k8s < lxd.profile
@@ -26,9 +26,24 @@ create_k8s_profile() {
   fi
 }
 
+create_cluster_nodes() {
+  echo "==================================================="
+  echo "🏗️ Bringing up $1"
+  echo "==================================================="
+  if ! lxc info "$node" &> /dev/null; then
+    lxc launch --profile k8s ubuntu:24.04 "$node"
+  else
+    echo "❌ Node already exists"
+  fi
+}
+
 case "$1" in
   provision)
     create_k8s_profile
+
+    for node in "${NODES[@]}"; do
+      create_cluster_nodes $node
+    done
   ;;
 esac
 
