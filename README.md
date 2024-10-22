@@ -22,9 +22,9 @@ cat lxd.profile | lxc profile edit k8s
 We need to provision 3 nodes i.e. lxd container running **Ubuntu 22.04** with the **k8s** profile that we created
 
 ```
-lxc launch --profile k8s ubuntu:220.4 master
-lxc launch --profile k8s ubuntu:220.4 worker1
-lxc launch --profile k8s ubuntu:220.4 worker2
+lxc launch --profile k8s ubuntu:24.04 master
+lxc launch --profile k8s ubuntu:24.04 worker1
+lxc launch --profile k8s ubuntu:24.04 worker2
 ```
 
 Cluster setup requires certain comands to be executed on both master and worker.
