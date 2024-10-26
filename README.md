@@ -8,4 +8,4 @@ Install microk8s using the steps described [here](https://microk8s.io/#install-m
 
 # Steps
 
-Steaps for installing and configuring each component are described in their respective directory as part of `README.md`
+Steps for installing and configuring each component are described in their respective directory as part of `README.md`
