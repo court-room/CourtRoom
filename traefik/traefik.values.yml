@@ -316,10 +316,10 @@ providers: # @schema additionalProperties: false
 # - "--providers.file.filename=/config/dynamic.toml"
 # - "--ping"
 # - "--ping.entrypoint=web"`
-volumes: []
-# - name: public-cert
-#   mountPath: "/certs"
-#   type: secret
+volumes:
+  - name: pebble
+    mountPath: "/certs"
+    type: configMap
 # - name: '{{ printf "%s-configs" .Release.Name }}'
 #   mountPath: "/config"
 #   type: configMap
@@ -557,14 +557,15 @@ tracing: # @schema additionalProperties: false
 # -- Global command arguments to be passed to all traefik's pods
 globalArguments:
   - "--global.checknewversion"
-  - "--global.sendanonymoususage"
 
 # -- Additional arguments to be passed at Traefik's binary
 # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
 # Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
-additionalArguments: []
-#  - "--providers.kubernetesingress.ingressclass=traefik-internal"
-#  - "--log.level=DEBUG"
+additionalArguments:
+  - "--certificatesresolvers.pebble.acme.tlschallenge=true"
+  - "--certificatesresolvers.pebble.acme.email=test@hello.com"
+  - "--certificatesresolvers.pebble.acme.storage=/data/acme.json"
+  - "--certificatesresolvers.pebble.acme.caserver=https://pebble/dir"
 
 # -- Environment variables to be passed to Traefik's binary
 # @default -- See _values.yaml_
@@ -577,6 +578,8 @@ env:
     valueFrom:
       fieldRef:
         fieldPath: metadata.namespace
+  - name: LEGO_CA_CERTIFICATES
+    value: "/certs/root-cert.pem"
 
 # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
 envFrom: []
